@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Poker Royale - Texas Hold'em</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: radial-gradient(circle at center, #0b0b0b 0%, #000000 100%);
+            color: #ffffff;
+            font-family: 'Arial', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            padding: 20px;
+            color: gold;
+            font-size: 2.5em;
+            border-bottom: 3px solid gold;
+            width: 100%;
+            max-width: 1000px;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        #game-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 1000px;
+            gap: 30px;
+        }
+
+        #table {
+            background: linear-gradient(135deg, #006400, #008000);
+            border: 8px solid #daa520;
+            border-radius: 50px;
+            width: 100%;
+            min-height: 500px;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .player-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 20px;
+            min-width: 300px;
+        }
+
+        .player-area h3 {
+            color: gold;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+
+        .cards {
+            display: flex;
+            gap: 15px;
+            margin: 10px 0;
+        }
+
+        .card {
+            width: 80px;
+            height: 120px;
+            background: white;
+            color: black;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            font-size: 1.5em;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card.red {
+            color: #ff0000;
+        }
+
+        .card.back {
+            background: linear-gradient(45deg, #8b0000, #ff0000);
+            color: transparent;
+            position: relative;
+        }
+
+        .card.back::before {
+            content: "♠️♥️";
+            position: absolute;
+            color: rgba(255,255,255,0.1);
+            font-size: 1.2em;
+        }
+
+        #community-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 30px 0;
+        }
+
+        #community-area h3 {
+            color: gold;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+
+        #community-cards {
+            display: flex;
+            gap: 10px;
+        }
+
+        #controls {
+            display: flex;
+            gap: 15px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        button {
+            background: linear-gradient(45deg, #ffd700, #ffed4e);
+            color: black;
+            border: none;
+            padding: 15px 25px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+            min-width: 150px;
+        }
+
+        button:hover {
+            background: linear-gradient(45deg, #ffed4e, #ffd700);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 215, 0, 0.5);
+        }
+
+        button:disabled {
+            background: #666;
+            color: #999;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        #status {
+            margin: 20px 0;
+            padding: 15px 30px;
+            background: rgba(255, 215, 0, 0.1);
+            border: 1px solid gold;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 1.2em;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        #chips {
+            display: flex;
+            gap: 20px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .chip {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+            cursor: pointer;
+            border: 3px solid white;
+            transition: transform 0.2s ease;
+        }
+
+        .chip:hover {
+            transform: scale(1.1);
+        }
+
+        .chip-10 { background: #ff4444; }
+        .chip-25 { background: #4444ff; }
+        .chip-50 { background: #44ff44; }
+        .chip-100 { background: #ffff44; color: black; }
+        .chip-500 { background: #ff44ff; }
+
+        #pot {
+            color: gold;
+            font-size: 1.3em;
+            margin: 10px 0;
+        }
+
+        .hand-strength {
+            font-size: 0.9em;
+            color: #ccc;
+            margin-top: 5px;
+            font-style: italic;
+        }
+
+        footer {
+            color: #777;
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            border-top: 1px solid #333;
+            width: 100%;
+            max-width: 1000px;
+        }
+
+        @media (max-width: 768px) {
+            .card {
+                width: 60px;
+                height: 90px;
+                font-size: 1.2em;
+            }
+            
+            #controls {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            button {
+                width: 200px;
+            }
+            
+            .player-area {
+                min-width: 250px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .card {
+                width: 50px;
+                height: 75px;
+                font-size: 1em;
+            }
+            
+            header {
+                font-size: 2em;
+            }
+        }
+
+        .winning-hand {
+            animation: pulse 1.5s infinite;
+            border: 3px solid gold;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 10px gold; }
+            50% { box-shadow: 0 0 20px gold; }
+            100% { box-shadow: 0 0 10px gold; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        ♠️ POKER ROYALE - TEXAS HOLD'EM ♥️
+    </header>
+
+    <div id="game-container">
+        <div id="table">
+            <!-- Giocatore CPU -->
+            <div class="player-area">
+                <h3>🖥️ CPU</h3>
+                <div class="cards" id="cpu-hand"></div>
+                <div id="cpu-strength" class="hand-strength"></div>
+            </div>
+
+            <!-- Carte comunitarie -->
+            <div id="community-area">
+                <h3>🎯 CARTE COMUNITARIE</h3>
+                <div id="community-cards" class="cards"></div>
+                <div id="pot">POT: €<span id="pot-amount">0</span></div>
+            </div>
+
+            <!-- Giocatore umano -->
+            <div class="player-area">
+                <h3>👤 TU</h3>
+                <div class="cards" id="player-hand"></div>
+                <div id="player-strength" class="hand-strength"></div>
+                <div id="chips">
+                    <div class="chip chip-10" onclick="bet(10)">10</div>
+                    <div class="chip chip-25" onclick="bet(25)">25</div>
+                    <div class="chip chip-50" onclick="bet(50)">50</div>
+                    <div class="chip chip-100" onclick="bet(100)">100</div>
+                    <div class="chip chip-500" onclick="bet(500)">500</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="controls">
+            <button onclick="startGame()">🔄 NUOVA MANO</button>
+            <button onclick="call()" id="call-btn">📞 CALL</button>
+            <button onclick="raise()" id="raise-btn">⬆️ RAISE</button>
+            <button onclick="fold()" id="fold-btn">📭 FOLD</button>
+            <button onclick="revealAll()" id="reveal-btn">👁️ MOSTRA TUTTO</button>
+        </div>
+
+        <div id="status">
+            Clicca "NUOVA MANO" per iniziare a giocare!
+        </div>
+    </div>
+
+    <footer>
+        © 2025 Poker Royale - Gioca responsabilmente | Crediti: €<span id="credits">1000</span>
+    </footer>
+
+    <script>
+        // Variabili di gioco
+        const suits = ['♠', '♥', '♦', '♣'];
+        const values = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
+        let deck = [];
+        let playerHand = [];
+        let cpuHand = [];
+        let communityCards = [];
+        let gamePhase = 0; // 0: pre-flop, 1: flop, 2: turn, 3: river, 4: showdown
+        let playerCredits = 1000;
+        let pot = 0;
+        let currentBet = 0;
+
+        // Creazione del mazzo
+        function createDeck() {
+            deck = [];
+            for (let suit of suits) {
+                for (let value of values) {
+                    deck.push({ suit: suit, value: value });
+                }
+            }
+            // Mescola il mazzo
+            for (let i = deck.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [deck[i], deck[j]] = [deck[j], deck[i]];
+            }
+        }
+
+        // Pesca una carta
+        function drawCard() {
+            return deck.pop();
+        }
+
+        // Mostra le carte
+        function displayCards(containerId, cards, hide = false) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+            cards.forEach((card, index) => {
+                const div = document.createElement('div');
+                div.classList.add('card');
+                if (hide && containerId === 'cpu-hand') {
+                    div.classList.add('back');
+                } else {
+                    div.textContent = `${card.value}${card.suit}`;
+                    if (card.suit === '♥' || card.suit === '♦') {
+                        div.classList.add('red');
+                    }
+                }
+                container.appendChild(div);
+            });
+        }
+
+        // Valuta la forza della mano
+        function evaluateHand(cards) {
+            // Implementazione semplificata della valutazione
+            const allCards = [...cards];
+            const valueCount = {};
+            
+            allCards.forEach(card => {
+                valueCount[card.value] = (valueCount[card.value] || 0) + 1;
+            });
+
+            const pairs = Object.values(valueCount).filter(count => count === 2).length;
+            const threeOfKind = Object.values(valueCount).filter(count => count === 3).length;
+            const fourOfKind = Object.values(valueCount).filter(count => count === 4).length;
+
+            if (fourOfKind) return "POKER";
+            if (threeOfKind && pairs) return "FULL HOUSE";
+            if (threeOfKind) return "TRIS";
+            if (pairs === 2) return "DOPPIA COPPIA";
+            if (pairs === 1) return "COPPIA";
+            
+            return "CARTA ALTA";
+        }
+
+        // Determina il vincitore
+        function determineWinner() {
+            const playerStrength = evaluateHand([...playerHand, ...communityCards]);
+            const cpuStrength = evaluateHand([...cpuHand, ...communityCards]);
+            
+            document.getElementById('player-strength').textContent = playerStrength;
+            document.getElementById('cpu-strength').textContent = cpuStrength;
+            
+            // Logica semplificata per determinare il vincitore
+            const handRank = {
+                "CARTA ALTA": 0,
+                "COPPIA": 1,
+                "DOPPIA COPPIA": 2,
+                "TRIS": 3,
+                "FULL HOUSE": 4,
+                "POKER": 5
+            };
+
+            if (handRank[playerStrength] > handRank[cpuStrength]) {
+                return 'player';
+            } else if (handRank[playerStrength] < handRank[cpuStrength]) {
+                return 'cpu';
+            } else {
+                return 'tie';
+            }
+        }
+
+        // Inizia una nuova mano
+        function startGame() {
+            if (playerCredits < 20) {
+                document.getElementById('status').textContent = "Crediti insufficienti! Gioco terminato.";
+                return;
+            }
+
+            createDeck();
+            playerHand = [drawCard(), drawCard()];
+            cpuHand = [drawCard(), drawCard()];
+            communityCards = [];
+            gamePhase = 0;
+            currentBet = 20;
+            pot = 40;
+            playerCredits -= 20;
+
+            // Distribuisci il flop
+            for (let i = 0; i < 3; i++) {
+                communityCards.push(drawCard());
+            }
+
+            updateDisplay();
+            document.getElementById('status').textContent = "Pre-flop: Fai la tua mossa!";
+            enableButtons();
+        }
+
+        // Aggiorna il display
+        function updateDisplay() {
+            displayCards('player-hand', playerHand);
+            displayCards('cpu-hand', cpuHand, true);
+            
+            // Mostra le carte comunitarie in base alla fase
+            const cardsToShow = gamePhase >= 1 ? communityCards.slice(0, 3) : [];
+            if (gamePhase >= 2) cardsToShow.push(communityCards[3]);
+            if (gamePhase >= 3) cardsToShow.push(communityCards[4]);
+            
+            displayCards('community-cards', cardsToShow);
+            
+            document.getElementById('pot-amount').textContent = pot;
+            document.getElementById('credits').textContent = playerCredits;
+        }
+
+        // Abilita i pulsanti
+        function enableButtons() {
+            document.getElementById('call-btn').disabled = false;
+            document.getElementById('raise-btn').disabled = false;
+            document.getElementById('fold-btn').disabled = false;
+        }
+
+        // Disabilita i pulsanti
+        function disableButtons() {
+            document.getElementById('call-btn').disabled = true;
+            document.getElementById('raise-btn').disabled = true;
+            document.getElementById('fold-btn').disabled = true;
+        }
+
+        // Funzioni di gioco
+        function call() {
+            if (playerCredits >= currentBet) {
+                playerCredits -= currentBet;
+                pot += currentBet;
+                advanceGamePhase();
+            }
+        }
+
+        function raise() {
+            const raiseAmount = currentBet * 2;
+            if (playerCredits >= raiseAmount) {
+                playerCredits -= raiseAmount;
+                pot += raiseAmount;
+                currentBet = raiseAmount;
+                advanceGamePhase();
+            }
+        }
+
+        function fold() {
+            document.getElementById('status').textContent = "Hai foldato! La CPU vince il pot.";
+            pot = 0;
+            disableButtons();
+        }
+
+        function bet(amount) {
+            if (playerCredits >= amount) {
+                playerCredits -= amount;
+                pot += amount;
+                currentBet = Math.max(currentBet, amount);
+                updateDisplay();
+            }
+        }
+
+        function revealAll() {
+            displayCards('cpu-hand', cpuHand);
+            displayCards('community-cards', communityCards);
+            
+            const winner = determineWinner();
+            const playerStrength = evaluateHand([...playerHand, ...communityCards]);
+            const cpuStrength = evaluateHand([...cpuHand, ...communityCards]);
+            
+            let message = `TU: ${playerStrength} | CPU: ${cpuStrength}. `;
+            
+            if (winner === 'player') {
+                message += "🎉 HAI VINTO!";
+                playerCredits += pot;
+                document.getElementById('player-hand').classList.add('winning-hand');
+            } else if (winner === 'cpu') {
+                message += "💻 CPU VINCE!";
+                document.getElementById('cpu-hand').classList.add('winning-hand');
+            } else {
+                message += "🤝 PAREGGIO!";
+                playerCredits += pot / 2;
+            }
+            
+            document.getElementById('status').textContent = message;
+            pot = 0;
+            disableButtons();
+        }
+
+        // Avanza la fase di gioco
+        function advanceGamePhase() {
+            gamePhase++;
+            
+            if (gamePhase === 1) {
+                // Flop già distribuito
+                document.getElementById('status').textContent = "Flop: Fai la tua mossa!";
+            } else if (gamePhase === 2) {
+                // Turn
+                communityCards.push(drawCard());
+                document.getElementById('status').textContent = "Turn: Fai la tua mossa!";
+            } else if (gamePhase === 3) {
+                // River
+                communityCards.push(drawCard());
+                document.getElementById('status').textContent = "River: Fai la tua mossa!";
+            } else if (gamePhase === 4) {
+                // Showdown
+                revealAll();
+                return;
+            }
+            
+            updateDisplay();
+        }
+
+        // Inizializzazione
+        document.addEventListener('DOMContentLoaded', function() {
+            updateDisplay();
+            disableButtons();
+        });
+    </script>
+</body>
+</html>

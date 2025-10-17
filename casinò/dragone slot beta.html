@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Slot Machine Drago Cinese</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #8B0000, #450000);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            color: #FFD700;
+        }
+        
+        .slot-machine {
+            background: rgba(0, 0, 0, 0.85);
+            border-radius: 20px;
+            padding: 30px;
+            width: 100%;
+            max-width: 700px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+            border: 5px solid #FFD700;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .slot-machine::before {
+            content: "";
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            right: -10px;
+            bottom: -10px;
+            background: linear-gradient(45deg, #8B0000, #B22222, #FFD700, #B22222, #8B0000);
+            z-index: -1;
+            filter: blur(20px);
+            opacity: 0.5;
+        }
+        
+        .chinese-border {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            right: 10px;
+            bottom: 10px;
+            border: 2px solid #FFD700;
+            border-radius: 15px;
+            pointer-events: none;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+            position: relative;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #8B0000;
+        }
+        
+        .title {
+            font-size: 3rem;
+            color: #FFD700;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.7);
+            margin-bottom: 10px;
+            letter-spacing: 3px;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            color: #FFA500;
+            margin-bottom: 10px;
+        }
+        
+        .dragon-decoration {
+            font-size: 2rem;
+            margin: 10px 0;
+            letter-spacing: 10px;
+        }
+        
+        .info-panel {
+            display: flex;
+            justify-content: space-between;
+            background: rgba(139, 0, 0, 0.5);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            border: 2px solid #FFD700;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+        }
+        
+        .credits, .bet, .win {
+            text-align: center;
+            flex: 1;
+        }
+        
+        .value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #FFD700;
+            text-shadow: 0 0 5px rgba(255, 215, 0, 0.7);
+        }
+        
+        .label {
+            font-size: 1rem;
+            color: #FFA500;
+            margin-bottom: 5px;
+        }
+        
+        .reels-container {
+            background: rgba(30, 0, 0, 0.9);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            border: 3px solid #8B0000;
+            position: relative;
+            overflow: hidden;
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.7);
+        }
+        
+        .reels {
+            display: flex;
+            justify-content: space-between;
+            height: 180px;
+            perspective: 1000px;
+        }
+        
+        .reel {
+            width: 30%;
+            height: 100%;
+            background: linear-gradient(to bottom, #222, #450000);
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+            border: 3px solid #8B0000;
+            box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.8), 0 5px 15px rgba(0, 0, 0, 0.5);
+        }
+        
+        .reel-inner {
+            position: absolute;
+            width: 100%;
+            transition: transform 0.1s;
+        }
+        
+        .symbol {
+            height: 180px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 80px;
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.7);
+            filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.5));
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .btn {
+            flex: 1;
+            padding: 15px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 5px 0 rgba(0, 0, 0, 0.3);
+        }
+        
+        .btn-spin {
+            background: linear-gradient(to bottom, #B22222, #8B0000);
+            color: #FFD700;
+        }
+        
+        .btn-spin:hover {
+            background: linear-gradient(to bottom, #CD5C5C, #A52A2A);
+            transform: translateY(-2px);
+            box-shadow: 0 7px 0 rgba(0, 0, 0, 0.3);
+        }
+        
+        .btn-spin:active {
+            transform: translateY(3px);
+            box-shadow: 0 2px 0 rgba(0, 0, 0, 0.3);
+        }
+        
+        .btn-bet {
+            background: linear-gradient(to bottom, #DAA520, #B8860B);
+            color: #8B0000;
+        }
+        
+        .btn-bet:hover {
+            background: linear-gradient(to bottom, #F0E68C, #DAA520);
+            transform: translateY(-2px);
+            box-shadow: 0 7px 0 rgba(0, 0, 0, 0.3);
+        }
+        
+        .btn-bet:active {
+            transform: translateY(3px);
+            box-shadow: 0 2px 0 rgba(0, 0, 0, 0.3);
+        }
+        
+        .btn-max-bet {
+            background: linear-gradient(to bottom, #FFD700, #DAA520);
+            color: #8B0000;
+        }
+        
+        .btn-max-bet:hover {
+            background: linear-gradient(to bottom, #FFEC8B, #FFD700);
+            transform: translateY(-2px);
+            box-shadow: 0 7px 0 rgba(0, 0, 0, 0.3);
+        }
+        
+        .btn-max-bet:active {
+            transform: translateY(3px);
+            box-shadow: 0 2px 0 rgba(0, 0, 0, 0.3);
+        }
+        
+        .paytable {
+            background: rgba(139, 0, 0, 0.5);
+            border-radius: 10px;
+            padding: 20px;
+            border: 2px solid #FFD700;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+        }
+        
+        .paytable h3 {
+            text-align: center;
+            color: #FFD700;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+            text-shadow: 0 0 5px rgba(255, 215, 0, 0.7);
+        }
+        
+        .paytable-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+        
+        .paytable-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 10px;
+            border: 1px solid #FFD700;
+        }
+        
+        .paytable-symbol {
+            font-size: 40px;
+            filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.5));
+        }
+        
+        .paytable-payout {
+            color: #FFD700;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+        
+        .win-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 90;
+            pointer-events: none;
+        }
+        
+        .win-text {
+            font-size: 5rem;
+            color: #FFD700;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
+            animation: zoom 1s infinite alternate;
+        }
+        
+        @keyframes zoom {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.2); }
+        }
+        
+        .spinning {
+            animation: spin 0.1s infinite linear;
+        }
+        
+        @keyframes spin {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-180px); }
+        }
+        
+        .jackpot-win {
+            color: #FFD700;
+            font-weight: bold;
+            animation: jackpot 0.5s infinite;
+        }
+        
+        @keyframes jackpot {
+            0% { color: #FFD700; }
+            25% { color: #FF0000; }
+            50% { color: #FFFFFF; }
+            75% { color: #FFA500; }
+            100% { color: #FFD700; }
+        }
+        
+        .message {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: #FFD700;
+            padding: 10px 20px;
+            border-radius: 5px;
+            display: none;
+            z-index: 1000;
+            border: 1px solid #FFD700;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+        
+        .lanterns {
+            position: absolute;
+            top: -30px;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: space-around;
+            z-index: 5;
+        }
+        
+        .lantern {
+            width: 40px;
+            height: 60px;
+            background: #8B0000;
+            border-radius: 20px;
+            position: relative;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+        
+        .lantern::before {
+            content: "";
+            position: absolute;
+            top: -10px;
+            left: 10px;
+            width: 20px;
+            height: 20px;
+            background: #FFD700;
+            border-radius: 50%;
+        }
+        
+        .lantern::after {
+            content: "";
+            position: absolute;
+            bottom: -15px;
+            left: 15px;
+            width: 10px;
+            height: 15px;
+            background: #FFD700;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 0.9rem;
+            color: #FFA500;
+        }
+    </style>
+</head>
+<body>
+    <div class="slot-machine">
+        <div class="lanterns">
+            <div class="lantern"></div>
+            <div class="lantern"></div>
+            <div class="lantern"></div>
+            <div class="lantern"></div>
+            <div class="lantern"></div>
+        </div>
+        
+        <div class="chinese-border"></div>
+        
+        <div class="header">
+            <div class="dragon-decoration">🐉 🐉 🐉</div>
+            <h1 class="title">福禄寿</h1>
+            <div class="dragon-decoration">🐉 🐉 🐉</div>
+            <p class="subtitle">Fortuna, Prosperità e Longevità</p>
+        </div>
+        
+        <div class="info-panel">
+            <div class="credits">
+                <div class="label">CREDITI</div>
+                <div class="value" id="credits">1000</div>
+            </div>
+            <div class="bet">
+                <div class="label">PUNTATA</div>
+                <div class="value" id="bet">10</div>
+            </div>
+            <div class="win">
+                <div class="label">VINCITA</div>
+                <div class="value" id="win">0</div>
+            </div>
+        </div>
+        
+        <div class="reels-container">
+            <div class="reels">
+                <div class="reel">
+                    <div class="reel-inner" id="reel1"></div>
+                </div>
+                <div class="reel">
+                    <div class="reel-inner" id="reel2"></div>
+                </div>
+                <div class="reel">
+                    <div class="reel-inner" id="reel3"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="controls">
+            <button class="btn btn-bet" id="decreaseBet">Puntata -</button>
+            <button class="btn btn-max-bet" id="maxBet">Puntata Max</button>
+            <button class="btn btn-spin" id="spin">GIRARE!</button>
+        </div>
+        
+        <div class="paytable">
+            <h3>TABELLA VINCITE</h3>
+            <div class="paytable-grid">
+                <div class="paytable-item">
+                    <div class="paytable-symbol">福</div>
+                    <div class="paytable-payout">x3 = 20 crediti</div>
+                    <div class="paytable-payout">x2 = 5 crediti</div>
+                </div>
+                <div class="paytable-item">
+                    <div class="paytable-symbol">禄</div>
+                    <div class="paytable-payout">x3 = 30 crediti</div>
+                    <div class="paytable-payout">x2 = 10 crediti</div>
+                </div>
+                <div class="paytable-item">
+                    <div class="paytable-symbol">寿</div>
+                    <div class="paytable-payout">x3 = 50 crediti</div>
+                    <div class="paytable-payout">x2 = 15 crediti</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Drago della Fortuna - Gioca responsabilmente</p>
+        </div>
+    </div>
+    
+    <div class="win-animation" id="winAnimation">
+        <div class="win-text" id="winText">VINCITA!</div>
+    </div>
+    
+    <div class="message" id="message"></div>
+    
+    <audio id="spinSound" src="https://assets.mixkit.co/sfx/preview/mixkit-slot-machine-spin-1087.mp3" preload="auto"></audio>
+    <audio id="winSound" src="https://assets.mixkit.co/sfx/preview/mixkit-winning-chimes-2015.mp3" preload="auto"></audio>
+
+    <script>
+        // Simboli del tema cinese: Fortuna (福), Prosperità (禄), Longevità (寿)
+        const symbols = ['福', '禄', '寿'];
+        
+        // Vincite per combinazioni
+        const payouts = {
+            '福': {2: 5, 3: 20},
+            '禄': {2: 10, 3: 30},
+            '寿': {2: 15, 3: 50}
+        };
+        
+        // Stato del gioco
+        let credits = 1000;
+        let currentBet = 10;
+        let winAmount = 0;
+        let isSpinning = false;
+        
+        // Elementi DOM
+        const creditsElement = document.getElementById('credits');
+        const betElement = document.getElementById('bet');
+        const winElement = document.getElementById('win');
+        const spinButton = document.getElementById('spin');
+        const decreaseBetButton = document.getElementById('decreaseBet');
+        const maxBetButton = document.getElementById('maxBet');
+        const reels = [
+            document.getElementById('reel1'),
+            document.getElementById('reel2'),
+            document.getElementById('reel3')
+        ];
+        const winAnimation = document.getElementById('winAnimation');
+        const winText = document.getElementById('winText');
+        const message = document.getElementById('message');
+        
+        // Suoni
+        const spinSound = document.getElementById('spinSound');
+        const winSound = document.getElementById('winSound');
+        
+        // Inizializza i rulli
+        function initializeReels() {
+            reels.forEach(reel => {
+                // Aggiungi simboli extra per l'effetto di rotazione
+                for (let i = 0; i < 15; i++) {
+                    const symbolIndex = Math.floor(Math.random() * symbols.length);
+                    const symbolElement = document.createElement('div');
+                    symbolElement.className = 'symbol';
+                    symbolElement.textContent = symbols[symbolIndex];
+                    reel.appendChild(symbolElement);
+                }
+            });
+        }
+        
+        // Aggiorna il display
+        function updateDisplay() {
+            creditsElement.textContent = credits;
+            betElement.textContent = currentBet;
+            winElement.textContent = winAmount;
+            
+            // Evidenzia la vincita se presente
+            if (winAmount > 0) {
+                winElement.classList.add('jackpot-win');
+            } else {
+                winElement.classList.remove('jackpot-win');
+            }
+        }
+        
+        // Mostra un messaggio temporaneo
+        function showMessage(text, duration = 3000) {
+            message.textContent = text;
+            message.style.display = 'block';
+            setTimeout(() => {
+                message.style.display = 'none';
+            }, duration);
+        }
+        
+        // Animazione di vittoria
+        function showWinAnimation(text) {
+            winText.textContent = text;
+            winAnimation.style.display = 'flex';
+            setTimeout(() => {
+                winAnimation.style.display = 'none';
+            }, 2000);
+        }
+        
+        // Calcola la vincita
+        function calculateWin(result) {
+            let win = 0;
+            
+            // Controlla le combinazioni vincenti
+            for (const symbol of symbols) {
+                let count = 0;
+                for (let i = 0; i < result.length; i++) {
+                    if (result[i] === symbol) {
+                        count++;
+                    } else {
+                        break;
+                    }
+                }
+                
+                if (count >= 2 && payouts[symbol][count]) {
+                    win += currentBet * payouts[symbol][count];
+                }
+            }
+            
+            if (win > 0) {
+                showWinAnimation('VINCITA!');
+                winSound.play();
+            }
+            
+            return win;
+        }
+        
+        // Gira i rulli
+        function spinReels() {
+            if (isSpinning) return;
+            
+            if (credits < currentBet) {
+                showMessage('Crediti insufficienti!');
+                return;
+            }
+            
+            // Deduci la puntata
+            credits -= currentBet;
+            winAmount = 0;
+            updateDisplay();
+            
+            isSpinning = true;
+            spinButton.disabled = true;
+            
+            // Riproduci il suono di rotazione
+            spinSound.play();
+            
+            // Animazione di rotazione
+            reels.forEach((reel, index) => {
+                reel.style.animation = 'spin 0.1s infinite linear';
+                
+                // Ferma la rotazione dopo un tempo casuale
+                setTimeout(() => {
+                    reel.style.animation = 'none';
+                    
+                    // Imposta il risultato finale
+                    const resultSymbols = [];
+                    for (let i = 0; i < 3; i++) {
+                        const symbolIndex = Math.floor(Math.random() * symbols.length);
+                        resultSymbols.push(symbols[symbolIndex]);
+                    }
+                    
+                    // Aggiorna il rullo con il risultato
+                    const symbolsElements = reel.querySelectorAll('.symbol');
+                    for (let i = 0; i < 3; i++) {
+                        symbolsElements[i].textContent = resultSymbols[i];
+                    }
+                    
+                    // Calcola la vincita quando tutti i rulli si sono fermati
+                    if (index === reels.length - 1) {
+                        setTimeout(() => {
+                            const finalResult = [];
+                            reels.forEach(reel => {
+                                const firstSymbol = reel.querySelector('.symbol').textContent;
+                                finalResult.push(firstSymbol);
+                            });
+                            
+                            winAmount = calculateWin(finalResult);
+                            credits += winAmount;
+                            
+                            updateDisplay();
+                            
+                            isSpinning = false;
+                            spinButton.disabled = false;
+                        }, 500);
+                    }
+                }, 1000 + index * 300);
+            });
+        }
+        
+        // Gestione dei pulsanti
+        spinButton.addEventListener('click', spinReels);
+        
+        decreaseBetButton.addEventListener('click', () => {
+            if (currentBet > 10) {
+                currentBet -= 10;
+                updateDisplay();
+            }
+        });
+        
+        maxBetButton.addEventListener('click', () => {
+            currentBet = 100;
+            updateDisplay();
+        });
+        
+        // Inizializza il gioco
+        initializeReels();
+        updateDisplay();
+        
+        // Messaggio di benvenuto
+        setTimeout(() => {
+            showMessage('Benvenuto alla Slot Machine del Drago! 福禄寿 (Fortuna, Prosperità, Longevità)');
+        }, 1000);
+    </script>
+</body>
+</html>

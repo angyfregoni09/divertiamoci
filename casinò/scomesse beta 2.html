@@ -1,0 +1,1017 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CalabriaBet - Scommesse Live Prima Categoria Calabrese</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #006400;
+            --secondary: #8B0000;
+            --accent: #FFD700;
+            --dark: #1a1a1a;
+            --light: #f8f9fa;
+            --success: #28a745;
+            --danger: #dc3545;
+            --warning: #ffc107;
+            --info: #17a2b8;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: var(--light);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        header {
+            background: rgba(0, 0, 0, 0.85);
+            padding: 1rem 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-icon {
+            font-size: 2.5rem;
+            color: var(--accent);
+        }
+
+        .logo-text {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--accent);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .user-area {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+        }
+
+        .balance {
+            background: var(--accent);
+            color: var(--dark);
+            padding: 0.7rem 1.5rem;
+            border-radius: 30px;
+            font-weight: bold;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn {
+            padding: 0.7rem 1.5rem;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: var(--dark);
+        }
+
+        .btn-primary:hover {
+            background: #e6c200;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--light);
+            border: 2px solid var(--accent);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 215, 0, 0.1);
+        }
+
+        nav {
+            background: rgba(0, 0, 0, 0.7);
+            padding: 1rem 0;
+            margin-top: 5px;
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        nav a {
+            color: var(--light);
+            text-decoration: none;
+            font-weight: 600;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        nav a:hover, nav a.active {
+            background: var(--accent);
+            color: var(--dark);
+        }
+
+        .live-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--danger);
+            font-weight: bold;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        .warning-banner {
+            background: var(--danger);
+            color: var(--light);
+            text-align: center;
+            padding: 1rem;
+            font-weight: bold;
+            border-bottom: 2px solid var(--accent);
+        }
+
+        main {
+            padding: 2rem 0;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .matches-container {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+        }
+
+        @media (max-width: 992px) {
+            .matches-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .matches-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .match-card {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid var(--accent);
+            border-radius: 10px;
+            padding: 1.5rem;
+            backdrop-filter: blur(10px);
+            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .match-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .match-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .match-time {
+            font-size: 0.9rem;
+            color: #ccc;
+        }
+
+        .match-status {
+            background: var(--info);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .match-status.live {
+            background: var(--danger);
+            animation: pulse 1.5s infinite;
+        }
+
+        .match-status.finished {
+            background: var(--success);
+        }
+
+        .teams {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .team {
+            text-align: center;
+            flex: 1;
+        }
+
+        .team-logo {
+            width: 60px;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 0.5rem;
+            font-size: 1.5rem;
+        }
+
+        .team-name {
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .team-score {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin: 0.5rem 0;
+        }
+
+        .vs {
+            margin: 0 1rem;
+            color: var(--accent);
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .odds {
+            display: flex;
+            justify-content: space-around;
+            gap: 0.5rem;
+        }
+
+        .odd {
+            background: var(--accent);
+            color: var(--dark);
+            padding: 0.8rem 0.5rem;
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: center;
+            flex: 1;
+            margin: 0 0.2rem;
+            transition: all 0.3s;
+            font-weight: bold;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .odd:hover {
+            background: #FFA500;
+            transform: scale(1.05);
+        }
+
+        .odd-type {
+            font-size: 0.8rem;
+            margin-bottom: 5px;
+        }
+
+        .odd-value {
+            font-size: 1.1rem;
+        }
+
+        .bet-slip {
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid var(--accent);
+            border-radius: 10px;
+            padding: 1.5rem;
+            position: sticky;
+            top: 120px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .bet-slip-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .bet-slip-title {
+            color: var(--accent);
+            font-size: 1.5rem;
+        }
+
+        .clear-bets {
+            background: var(--danger);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .bet-items {
+            min-height: 200px;
+            margin-bottom: 1.5rem;
+        }
+
+        .bet-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 5px;
+            border-left: 4px solid var(--accent);
+        }
+
+        .bet-selection {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .bet-match {
+            font-size: 0.9rem;
+            color: #ccc;
+            margin-bottom: 5px;
+        }
+
+        .bet-odds {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+        }
+
+        .remove-bet {
+            color: var(--danger);
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .stake-input-container {
+            margin: 1.5rem 0;
+        }
+
+        .stake-input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid var(--accent);
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 1rem;
+        }
+
+        .stake-input:focus {
+            outline: none;
+            border-color: #FFA500;
+            box-shadow: 0 0 0 2px rgba(255, 165, 0, 0.2);
+        }
+
+        .potential-win {
+            background: rgba(255, 215, 0, 0.2);
+            padding: 1rem;
+            border-radius: 5px;
+            margin: 1rem 0;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .place-bet {
+            background: var(--accent);
+            color: var(--dark);
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            transition: background 0.3s;
+            font-size: 1.1rem;
+        }
+
+        .place-bet:hover {
+            background: #FFA500;
+        }
+
+        .responsible-gaming {
+            background: var(--danger);
+            padding: 1rem;
+            margin-top: 1.5rem;
+            border-radius: 5px;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        footer {
+            background: rgba(0, 0, 0, 0.9);
+            padding: 2rem 0;
+            margin-top: 3rem;
+            border-top: 3px solid var(--accent);
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .footer-section h3 {
+            color: var(--accent);
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-links a {
+            color: #ccc;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: var(--accent);
+        }
+
+        .copyright {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #999;
+            font-size: 0.9rem;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--success);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 5px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .toast.error {
+            background: var(--danger);
+        }
+
+        .countdown {
+            font-size: 0.8rem;
+            color: #ff6b6b;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+
+        .last-updated {
+            text-align: right;
+            font-size: 0.8rem;
+            color: #ccc;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="warning-banner">
+        <i class="fas fa-exclamation-triangle"></i> SITO DIMOSTRATIVO - NON SONO POSSIBILI SCOMMESSE REALI - USO EDUCATIVO <i class="fas fa-exclamation-triangle"></i>
+    </div>
+
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <div class="logo-icon">
+                        <i class="fas fa-futbol"></i>
+                    </div>
+                    <div class="logo-text">CalabriaBet</div>
+                </div>
+                <div class="user-area">
+                    <div class="balance">
+                        <i class="fas fa-coins"></i>
+                        <span id="balance-amount">€100.00</span>
+                    </div>
+                    <button class="btn btn-secondary"><i class="fas fa-user"></i> Accedi</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <nav>
+        <div class="container nav-container">
+            <ul>
+                <li><a href="#" class="active"><i class="fas fa-home"></i> Home</a></li>
+                <li><a href="#"><i class="fas fa-futbol"></i> Calcio</a></li>
+                <li><a href="#"><i class="fas fa-bolt"></i> Live</a></li>
+                <li><a href="#"><i class="fas fa-gift"></i> Promozioni</a></li>
+                <li><a href="#"><i class="fas fa-question-circle"></i> Aiuto</a></li>
+            </ul>
+            <div class="live-indicator">
+                <i class="fas fa-circle"></i>
+                <span>AGGIORNAMENTO AUTOMATICO ATTIVO</span>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container">
+        <h1 class="section-title">
+            <i class="fas fa-trophy"></i> Scommesse Prima Categoria Calabrese
+        </h1>
+        <p>Le migliori squadre della Calabria in un'unica piattaforma con aggiornamenti in tempo reale</p>
+
+        <div class="matches-container">
+            <div class="matches-section">
+                <h2 class="section-title">
+                    <i class="fas fa-list"></i> Partite in Programma
+                </h2>
+                <div class="matches-grid" id="matches-container">
+                    <!-- Le partite verranno caricate dinamicamente -->
+                </div>
+                <div class="last-updated" id="last-updated">
+                    Ultimo aggiornamento: <span id="update-time">Caricamento...</span>
+                </div>
+            </div>
+
+            <div class="betting-section">
+                <div class="bet-slip">
+                    <div class="bet-slip-header">
+                        <h3 class="bet-slip-title">Schedina Scommesse</h3>
+                        <button class="clear-bets" id="clear-bets">Pulisci</button>
+                    </div>
+                    <div class="bet-items" id="bet-items">
+                        <!-- Le scommesse selezionate appariranno qui -->
+                        <p style="text-align: center; padding: 2rem 0; color: #ccc;">Nessuna scommessa selezionata</p>
+                    </div>
+                    <div class="stake-input-container">
+                        <input type="number" class="stake-input" id="stake" placeholder="Importo scommessa (€)" min="1" max="100" step="0.5">
+                    </div>
+                    <div class="potential-win" id="potential-win">
+                        Vincita potenziale: €0.00
+                    </div>
+                    <button class="place-bet" id="place-bet">Piazza Scommessa</button>
+                    
+                    <div class="responsible-gaming">
+                        <strong><i class="fas fa-exclamation-circle"></i> Gioca Responsabilmente</strong><br>
+                        Il gioco è vietato ai minori. Gioca con moderazione.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>CalabriaBet</h3>
+                    <p>Il miglior sito di scommesse per il calcio calabrese. Scommetti sulle tue squadre preferite della Prima Categoria.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Link Utili</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Come Scommettere</a></li>
+                        <li><a href="#">Regolamento</a></li>
+                        <li><a href="#">Responsabile Gaming</a></li>
+                        <li><a href="#">Contatti</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Supporto</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="#">Metodi di Pagamento</a></li>
+                        <li><a href="#">Bonus e Promozioni</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>CalabriaBet - Sito dimostrativo per scopi educativi</p>
+                <p>⚠️ NON SONO POSSIBILI SCOMMESSE REALI ⚠️</p>
+                <p>Il gioco d'azzardo può causare dipendenza. Gioca responsabilmente.</p>
+            </div>
+        </div>
+    </footer>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        // Dati delle squadre calabresi
+        const calabrianTeams = [
+            "Roccella", "Siderno", "Gioiosa", "Locri", "Rosarno", 
+            "Taurianova", "Polistena", "Cittanova", "Gioia Tauro", "Palmi",
+            "Reggio Calabria", "Catanzaro Lido", "Crotone", "Vibo Valentia", "Lamezia Terme"
+        ];
+
+        // Genera partite casuali
+        function generateMatches() {
+            const matches = [];
+            const statuses = ["In Programma", "Live", "Terminata"];
+            
+            for (let i = 0; i < 8; i++) {
+                // Seleziona due squadre casuali diverse
+                let team1, team2;
+                do {
+                    team1 = calabrianTeams[Math.floor(Math.random() * calabrianTeams.length)];
+                    team2 = calabrianTeams[Math.floor(Math.random() * calabrianTeams.length)];
+                } while (team1 === team2);
+                
+                // Determina lo stato della partita
+                const status = statuses[Math.floor(Math.random() * statuses.length)];
+                
+                // Genera orario della partita
+                const matchTime = new Date();
+                matchTime.setHours(matchTime.getHours() + Math.floor(Math.random() * 48));
+                
+                // Genera quote casuali
+                const odds = {
+                    home: (Math.random() * 2 + 1).toFixed(2),
+                    draw: (Math.random() * 2 + 2).toFixed(2),
+                    away: (Math.random() * 3 + 2).toFixed(2)
+                };
+                
+                // Genera punteggio se la partita è in corso o terminata
+                let score1 = 0, score2 = 0;
+                if (status !== "In Programma") {
+                    score1 = Math.floor(Math.random() * 5);
+                    score2 = Math.floor(Math.random() * 5);
+                    
+                    // Se la partita è in corso, simula azioni in tempo reale
+                    if (status === "Live") {
+                        // Aggiungi minuto di gioco
+                        const minute = Math.floor(Math.random() * 90) + 1;
+                        matchTime.setMinutes(minute);
+                    }
+                }
+                
+                matches.push({
+                    id: i + 1,
+                    team1,
+                    team2,
+                    status,
+                    time: matchTime,
+                    odds,
+                    score1,
+                    score2
+                });
+            }
+            
+            return matches;
+        }
+
+        // Stato dell'applicazione
+        let state = {
+            balance: 100.00,
+            currentBets: [],
+            matches: generateMatches(),
+            lastUpdate: new Date()
+        };
+
+        // Aggiorna l'ora dell'ultimo aggiornamento
+        function updateLastUpdatedTime() {
+            const now = new Date();
+            document.getElementById('update-time').textContent = 
+                `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')}`;
+        }
+
+        // Formatta l'orario della partita
+        function formatMatchTime(date, status) {
+            if (status === "Live") {
+                return `${date.getMinutes()}'`;
+            }
+            
+            const now = new Date();
+            const diffMs = date - now;
+            const diffHrs = Math.floor(diffMs / (1000 * 60 * 60));
+            
+            if (diffHrs < 0) {
+                return "Oggi";
+            } else if (diffHrs < 24) {
+                return `Ore ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
+            } else {
+                return `${date.getDate()}/${date.getMonth() + 1}`;
+            }
+        }
+
+        // Renderizza le partite
+        function renderMatches() {
+            const matchesContainer = document.getElementById('matches-container');
+            matchesContainer.innerHTML = '';
+            
+            state.matches.forEach(match => {
+                const matchElement = document.createElement('div');
+                matchElement.className = 'match-card';
+                matchElement.innerHTML = `
+                    <div class="match-header">
+                        <div class="match-time">${formatMatchTime(match.time, match.status)}</div>
+                        <div class="match-status ${match.status === 'Live' ? 'live' : ''} ${match.status === 'Terminata' ? 'finished' : ''}">${match.status}</div>
+                    </div>
+                    <div class="teams">
+                        <div class="team">
+                            <div class="team-logo">${match.team1.substring(0, 2)}</div>
+                            <div class="team-name">${match.team1}</div>
+                            ${match.status !== "In Programma" ? `<div class="team-score">${match.score1}</div>` : ''}
+                        </div>
+                        <div class="vs">VS</div>
+                        <div class="team">
+                            <div class="team-logo">${match.team2.substring(0, 2)}</div>
+                            <div class="team-name">${match.team2}</div>
+                            ${match.status !== "In Programma" ? `<div class="team-score">${match.score2}</div>` : ''}
+                        </div>
+                    </div>
+                    <div class="odds">
+                        <div class="odd" onclick="addToBetSlip(${match.id}, '${match.team1}', ${match.odds.home})">
+                            <div class="odd-type">1</div>
+                            <div class="odd-value">${match.odds.home}</div>
+                        </div>
+                        <div class="odd" onclick="addToBetSlip(${match.id}, 'Pareggio', ${match.odds.draw})">
+                            <div class="odd-type">X</div>
+                            <div class="odd-value">${match.odds.draw}</div>
+                        </div>
+                        <div class="odd" onclick="addToBetSlip(${match.id}, '${match.team2}', ${match.odds.away})">
+                            <div class="odd-type">2</div>
+                            <div class="odd-value">${match.odds.away}</div>
+                        </div>
+                    </div>
+                    ${match.status === "In Programma" ? 
+                        `<div class="countdown">Inizia tra ${Math.floor((match.time - new Date()) / (1000 * 60 * 60))}h</div>` : ''}
+                `;
+                matchesContainer.appendChild(matchElement);
+            });
+            
+            updateLastUpdatedTime();
+        }
+
+        // Aggiungi una scommessa alla schedina
+        function addToBetSlip(matchId, selection, odds) {
+            const match = state.matches.find(m => m.id === matchId);
+            if (!match) return;
+            
+            // Verifica se la scommessa è già stata aggiunta
+            const existingBetIndex = state.currentBets.findIndex(
+                bet => bet.matchId === matchId && bet.selection === selection
+            );
+            
+            if (existingBetIndex !== -1) {
+                showToast("Scommessa già aggiunta", "error");
+                return;
+            }
+            
+            // Aggiungi la scommessa
+            state.currentBets.push({
+                matchId,
+                selection,
+                odds,
+                match: `${match.team1} - ${match.team2}`
+            });
+            
+            updateBetSlip();
+            showToast("Scommessa aggiunta alla schedina");
+        }
+
+        // Aggiorna la schedina delle scommesse
+        function updateBetSlip() {
+            const betItems = document.getElementById('bet-items');
+            const stakeInput = document.getElementById('stake');
+            
+            betItems.innerHTML = '';
+            
+            if (state.currentBets.length === 0) {
+                betItems.innerHTML = '<p style="text-align: center; padding: 2rem 0; color: #ccc;">Nessuna scommessa selezionata</p>';
+                document.getElementById('potential-win').textContent = 'Vincita potenziale: €0.00';
+                return;
+            }
+
+            state.currentBets.forEach((bet, index) => {
+                const betElement = document.createElement('div');
+                betElement.className = 'bet-item';
+                betElement.innerHTML = `
+                    <div class="bet-selection">${bet.selection}</div>
+                    <div class="bet-match">${bet.match}</div>
+                    <div class="bet-odds">
+                        <span>Quota: ${bet.odds}</span>
+                        <span class="remove-bet" onclick="removeBet(${index})">Rimuovi</span>
+                    </div>
+                `;
+                betItems.appendChild(betElement);
+            });
+
+            calculatePotentialWin();
+        }
+
+        // Rimuovi una scommessa dalla schedina
+        function removeBet(index) {
+            state.currentBets.splice(index, 1);
+            updateBetSlip();
+            showToast("Scommessa rimossa");
+        }
+
+        // Calcola la vincita potenziale
+        function calculatePotentialWin() {
+            const stake = parseFloat(document.getElementById('stake').value) || 0;
+            let totalOdds = 1;
+            
+            state.currentBets.forEach(bet => {
+                totalOdds *= parseFloat(bet.odds);
+            });
+
+            const potentialWin = stake * totalOdds;
+            document.getElementById('potential-win').textContent = 
+                `Vincita potenziale: €${potentialWin.toFixed(2)}`;
+        }
+
+        // Piazzare una scommessa
+        function placeBet() {
+            const stake = parseFloat(document.getElementById('stake').value);
+            
+            if (!stake || stake <= 0) {
+                showToast("Inserisci un importo valido", "error");
+                return;
+            }
+
+            if (stake > state.balance) {
+                showToast("Saldo insufficiente", "error");
+                return;
+            }
+
+            if (state.currentBets.length === 0) {
+                showToast("Seleziona almeno una scommessa", "error");
+                return;
+            }
+
+            // Simula una scommessa (NON REALE)
+            state.balance -= stake;
+            document.getElementById('balance-amount').textContent = `€${state.balance.toFixed(2)}`;
+            
+            showToast("Scommessa piazzata con successo! (SIMULAZIONE)");
+            
+            // Reset
+            state.currentBets = [];
+            document.getElementById('stake').value = '';
+            updateBetSlip();
+        }
+
+        // Mostra un messaggio toast
+        function showToast(message, type = "success") {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = 'toast';
+            
+            if (type === "error") {
+                toast.classList.add('error');
+            }
+            
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // Simula aggiornamenti in tempo reale delle partite
+        function simulateLiveUpdates() {
+            setInterval(() => {
+                // Aggiorna casualmente alcune partite
+                state.matches.forEach(match => {
+                    if (match.status === "Live") {
+                        // Simula un gol casuale
+                        if (Math.random() < 0.1) { // 10% di probabilità di gol
+                            if (Math.random() < 0.5) {
+                                match.score1++;
+                            } else {
+                                match.score2++;
+                            }
+                            
+                            // Aggiorna le quote dopo un gol
+                            match.odds.home = (Math.random() * 2 + 1).toFixed(2);
+                            match.odds.draw = (Math.random() * 2 + 2).toFixed(2);
+                            match.odds.away = (Math.random() * 3 + 2).toFixed(2);
+                        }
+                        
+                        // Aggiorna il minuto di gioco
+                        match.time.setMinutes(match.time.getMinutes() + 1);
+                        
+                        // Se il minuto supera 90, termina la partita
+                        if (match.time.getMinutes() > 90) {
+                            match.status = "Terminata";
+                        }
+                    } else if (match.status === "In Programma" && match.time < new Date()) {
+                        // Inizia la partita se è il momento
+                        match.status = "Live";
+                        match.time = new Date(); // Reset del tempo per il minuto di gioco
+                    }
+                });
+                
+                // Rigenera casualmente alcune partite terminate
+                if (Math.random() < 0.05) { // 5% di probabilità ogni aggiornamento
+                    const finishedMatches = state.matches.filter(m => m.status === "Terminata");
+                    if (finishedMatches.length > 0) {
+                        const randomIndex = Math.floor(Math.random() * finishedMatches.length);
+                        const newMatch = generateMatches()[0];
+                        state.matches[state.matches.indexOf(finishedMatches[randomIndex])] = newMatch;
+                    }
+                }
+                
+                state.lastUpdate = new Date();
+                renderMatches();
+            }, 5000); // Aggiorna ogni 5 secondi
+        }
+
+        // Inizializza l'applicazione
+        function init() {
+            renderMatches();
+            simulateLiveUpdates();
+            
+            // Aggiorna la vincita potenziale quando cambia l'importo
+            document.getElementById('stake').addEventListener('input', calculatePotentialWin);
+            
+            // Pulisci tutte le scommesse
+            document.getElementById('clear-bets').addEventListener('click', () => {
+                state.currentBets = [];
+                updateBetSlip();
+                showToast("Schedina pulita");
+            });
+            
+            // Piazzare la scommessa
+            document.getElementById('place-bet').addEventListener('click', placeBet);
+        }
+
+        // Avvia l'applicazione quando il DOM è pronto
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>

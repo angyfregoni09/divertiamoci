@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Casinò Online - Gioca e Vinci</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a0b2e, #8B008B, #FF1493);
+            min-height: 100vh;
+            color: white;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+            margin-bottom: 40px;
+        }
+        
+        .logo {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #FFD700;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.7);
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo i {
+            margin-right: 10px;
+            font-size: 2.8rem;
+        }
+        
+        .logo span {
+            color: #FF69B4;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        nav li {
+            margin-left: 25px;
+        }
+        
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+            padding: 8px 15px;
+            border-radius: 20px;
+        }
+        
+        nav a:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-3px);
+        }
+        
+        .hero {
+            text-align: center;
+            padding: 80px 20px;
+            margin-bottom: 50px;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('https://images.unsplash.com/photo-1533105079780-92b9be482077?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80') center/cover;
+            opacity: 0.2;
+            z-index: -1;
+        }
+        
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+        
+        .hero p {
+            font-size: 1.3rem;
+            max-width: 700px;
+            margin: 0 auto 30px;
+            line-height: 1.6;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(to right, #FF1493, #FF69B4);
+            color: white;
+            padding: 15px 40px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            text-decoration: none;
+            border-radius: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+            background: linear-gradient(to right, #FF69B4, #FF1493);
+        }
+        
+        .games-section {
+            margin: 60px 0;
+        }
+        
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 40px;
+            color: #FFD700;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.7);
+        }
+        
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+        }
+        
+        .game-card {
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s;
+            position: relative;
+        }
+        
+        .game-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+        }
+        
+        .game-image {
+            height: 200px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+        
+        .game-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: all 0.3s;
+        }
+        
+        .game-card:hover .game-overlay {
+            opacity: 1;
+        }
+        
+        .play-button {
+            background: #FF1493;
+            color: white;
+            padding: 12px 30px;
+            border-radius: 30px;
+            font-weight: bold;
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s;
+        }
+        
+        .play-button:hover {
+            background: #FF69B4;
+            transform: scale(1.1);
+        }
+        
+        .game-info {
+            padding: 20px;
+        }
+        
+        .game-title {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: #FFD700;
+        }
+        
+        .game-description {
+            color: #ddd;
+            line-height: 1.5;
+        }
+        
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin: 60px 0;
+        }
+        
+        .feature {
+            text-align: center;
+            padding: 30px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            transition: all 0.3s;
+        }
+        
+        .feature:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            color: #FFD700;
+        }
+        
+        .feature h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+        
+        .feature p {
+            color: #ddd;
+        }
+        
+        /* Nuove sezioni aggiunte */
+        .promotions-section {
+            margin: 60px 0;
+        }
+        
+        .promotions-carousel {
+            display: flex;
+            overflow-x: auto;
+            gap: 20px;
+            padding: 20px 0;
+            scrollbar-width: thin;
+            scrollbar-color: #FF1493 rgba(255, 255, 255, 0.1);
+        }
+        
+        .promotions-carousel::-webkit-scrollbar {
+            height: 8px;
+        }
+        
+        .promotions-carousel::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+        
+        .promotions-carousel::-webkit-scrollbar-thumb {
+            background: #FF1493;
+            border-radius: 10px;
+        }
+        
+        .promotion-card {
+            min-width: 300px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s;
+        }
+        
+        .promotion-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 25px rgba(0, 0, 0, 0.4);
+        }
+        
+        .promotion-image {
+            height: 150px;
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .promotion-content {
+            padding: 20px;
+        }
+        
+        .promotion-title {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            color: #FFD700;
+        }
+        
+        .promotion-description {
+            color: #ddd;
+            margin-bottom: 15px;
+        }
+        
+        .promotion-button {
+            display: inline-block;
+            background: #FF1493;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        
+        .promotion-button:hover {
+            background: #FF69B4;
+        }
+        
+        .testimonials-section {
+            margin: 60px 0;
+        }
+        
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        
+        .testimonial-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .testimonial-text {
+            font-style: italic;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+        
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+        }
+        
+        .author-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-size: cover;
+            background-position: center;
+            margin-right: 15px;
+        }
+        
+        .author-info h4 {
+            color: #FFD700;
+            margin-bottom: 5px;
+        }
+        
+        .author-info p {
+            color: #ddd;
+            font-size: 0.9rem;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 30px 0;
+            margin-top: 60px;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            color: #ddd;
+            font-size: 0.9rem;
+        }
+        
+        .jackpot {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        
+        .jackpot-content {
+            background: linear-gradient(135deg, #8B008B, #FF1493);
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            max-width: 500px;
+            box-shadow: 0 0 30px rgba(255, 20, 147, 0.7);
+            animation: pulse 2s infinite;
+        }
+        
+        .jackpot h2 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: #FFD700;
+        }
+        
+        .jackpot p {
+            margin-bottom: 30px;
+            font-size: 1.2rem;
+        }
+        
+        .jackpot-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .jackpot-button {
+            background: #FFD700;
+            color: #8B008B;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .jackpot-button:hover {
+            background: #FF69B4;
+            color: white;
+            transform: scale(1.05);
+        }
+        
+        .jackpot-button.no {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+        
+        .jackpot-button.no:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .bonus-banner {
+            background: linear-gradient(to right, #FFD700, #FF69B4);
+            color: #8B008B;
+            padding: 15px;
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 30px;
+            border-radius: 10px;
+            animation: blink 2s infinite;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .bonus-banner::before {
+            content: '🎰';
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.5rem;
+        }
+        
+        .bonus-banner::after {
+            content: '🎰';
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.5rem;
+        }
+        
+        @keyframes blink {
+            0% { opacity: 0.7; }
+            50% { opacity: 1; }
+            100% { opacity: 0.7; }
+        }
+        
+        .winning-counter {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            margin: 20px 0;
+            font-size: 1.2rem;
+            border: 1px solid #FFD700;
+        }
+        
+        .winning-counter span {
+            color: #FFD700;
+            font-weight: bold;
+            font-size: 1.4rem;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            nav ul {
+                margin-top: 20px;
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+            
+            nav li {
+                margin: 5px 10px;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .games-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .promotions-carousel {
+                padding-bottom: 10px;
+            }
+            
+            .promotion-card {
+                min-width: 250px;
+            }
+            
+            .bonus-banner::before, .bonus-banner::after {
+                display: none;
+            }
+            
+            .jackpot-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .jackpot-button {
+                width: 100%;
+                max-width: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bonus-banner">
+        BONUS DI BENVENUTO: 200% FINO A 1000€ + 100 GIRI GRATUITI!
+    </div>
+    
+    <div class="container">
+        <header>
+            <div class="logo"><i class="fas fa-dice"></i>CASINÒ<span>ONLINE</span></div>
+            <nav>
+                <ul>
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#">Giochi</a></li>
+                    <li><a href="#">Promozioni</a></li>
+                    <li><a href="#">Supporto</a></li>
+                    <li><a href="#">Registrati</a></li>
+                </ul>
+            </nav>
+        </header>
+        
+        <section class="hero">
+            <h1>VIVI L'ECCITAZIONE DEL VINCERE</h1>
+            <p>Scopri il piacere del gioco d'azzardo online con le nostre slot machine mozzafiato e i nostri tavoli da gioco esclusivi. La fortuna è a portata di click!</p>
+            <a href="#" class="cta-button">Gioca Ora</a>
+        </section>
+        
+        <div class="winning-counter">
+            <p>Oggi i nostri giocatori hanno già vinto: <span>€ 254.367</span></p>
+        </div>
+        
+        <section class="promotions-section">
+            <h2 class="section-title">PROMOZIONI ESCLUSIVE</h2>
+            <div class="promotions-carousel">
+                <div class="promotion-card">
+                    <div class="promotion-image" style="background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1620418003923-1c0bf5e89319?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80');"></div>
+                    <div class="promotion-content">
+                        <h3 class="promotion-title">BONUS DI BENVENUTO 200%</h3>
+                        <p class="promotion-description">Fino a 1000€ + 50 giri gratuiti sulla slot "Fortuna Esplosiva"</p>
+                        <a href="#" class="promotion-button">Approfittane ora</a>
+                    </div>
+                </div>
+                
+                <div class="promotion-card">
+                    <div class="promotion-image" style="background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1533105079780-92b9be482077?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80');"></div>
+                    <div class="promotion-content">
+                        <h3 class="promotion-title">GIRI GRATIS DEL VENERDÌ</h3>
+                        <p class="promotion-description">Ogni venerdì ricevi 20 giri gratuiti su una slot a sorpresa</p>
+                        <a href="#" class="promotion-button">Scopri di più</a>
+                    </div>
+                </div>
+                
+                <div class="promotion-card">
+                    <div class="promotion-image" style="background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1577495508326-19a1b3cf65b7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2069&q=80');"></div>
+                    <div class="promotion-content">
+                        <h3 class="promotion-title">TORNEO SETTIMANALE</h3>
+                        <p class="promotion-description">Partecipa e vinci una parte del montepremi da 50.000€</p>
+                        <a href="#" class="promotion-button">Iscriviti ora</a>
+                    </div>
+                </div>
+                
+                <div class="promotion-card">
+                    <div class="promotion-image" style="background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1542744095-fcf48d80b0fd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2076&q=80');"></div>
+                    <div class="promotion-content">
+                        <h3 class="promotion-title">CASHBACK 15%</h3>
+                        <p class="promotion-description">Ogni settimana ricevi il 15% delle tue perdite indietro</p>
+                        <a href="#" class="promotion-button">Attiva l'offerta</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section class="games-section">
+            <h2 class="section-title">I NOSTRI GIOCHI PIÙ POPOLARI</h2>
+            <div class="games-grid">
+                <div class="game-card">
+                    <div class="game-image" style="background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1598480446130-7c6ae2d4e819?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');">
+                        <div class="game-overlay">
+                            <a href="file:///C:/Users/maryp/Desktop/casin%C3%B2/slot%20beta.html" class="play-button">Gioca Ora</a>
+                        </div>
+                    </div>
+                    <div class="game-info">
+                        <h3 class="game-title">TOP DIAMOND</h3>
+                        <p class="game-description">Scintillante come un diamante puro, questa slot ti offre vincite brillanti e un'esperienza di gioco raffinata. Scopri il lusso del gioco!</p>
+                    </div>
+                </div>
+                
+                <div class="game-card">
+                    <div class="game-image" style="background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1617854818580-2d0c950fdddc?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');">
+                        <div class="game-overlay">
+                            <a href="file:///C:/Users/maryp/Desktop/casin%C3%B2/dragone%20slot%20beta.html" class="play-button">Gioca Ora</a>
+                        </div>
+                    </div>
+                    <div class="game-info">
+                        <h3 class="game-title">DRAGONE</h3>
+                        <p class="game-description">Entra nel mondo mitologico dei draghi cinesi e scopri tesori leggendari. La fortuna del drago ti porterà ricchezze inimmaginabili!</p>
+                    </div>
+                </div>
+                
+                <div class="game-card">
+                    <div class="game-image" style="background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1593119167130-9d5df5e1307a?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');">
+                        <div class="game-overlay">
+                            <a href="file:///C:/Users/maryp/Desktop/casin%C3%B2/blackjack%20beta.html" class="play-button">Gioca Ora</a>
+                        </div>
+                    </div>
+                    <div class="game-info">
+                        <h3 class="game-title">BLACKJACK</h3>
+                        <p class="game-description">Sfida il banco in questo classico senza tempo. Strategia, fortuna e adrenalina si mescolano in un gioco che non dorme mai!</p>
+                    </div>
+                </div>
+
+                <div class="game-card">
+                    <div class="game-image" style="background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1591370874773-670d30a52c4e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80');">
+                        <div class="game-overlay">
+                            <a href="file:///C:/Users/maryp/Desktop/casin%C3%B2/poker%20beta.html" class="play-button">Gioca Ora</a>
+                        </div>
+                    </div>
+                    <div class="game-info">
+                        <h3 class="game-title">POKER TEXAS HOLD'EM</h3>
+                        <p class="game-description">Diventa un maestro del poker! Sfida giocatori da tutto il mondo in partite emozionanti con jackpot progressivi e tornei esclusivi.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section class="features">
+            <div class="feature">
+                <div class="feature-icon"><i class="fas fa-money-bill-wave"></i></div>
+                <h3>VINCITE IMMEDIATE</h3>
+                <p>Ritiri rapidi e sicuri. I tuoi soldi arrivano direttamente sul tuo conto in pochissimo tempo.</p>
+            </div>
+            
+            <div class="feature">
+                <div class="feature-icon"><i class="fas fa-shield-alt"></i></div>
+                <h3>SICUREZZA TOTALE</h3>
+                <p>Giochi in un ambiente protetto e sicuro, con licenza e regolamentazione internazionale.</p>
+            </div>
+            
+            <div class="feature">
+                <div class="feature-icon"><i class="fas fa-gift"></i></div>
+                <h3>BONUS ESCLUSIVI</h3>
+                <p>Promozioni speciali ogni giorno per aumentare le tue possibilità di vincita.</p>
+            </div>
+            
+            <div class="feature">
+                <div class="feature-icon"><i class="fas fa-mobile-alt"></i></div>
+                <h3>GIOCHI MOBILE</h3>
+                <p>Gioca dove vuoi, quando vuoi. La nostra piattaforma è ottimizzata per tutti i dispositivi.</p>
+            </div>
+        </section>
+        
+        <section class="testimonials-section">
+            <h2 class="section-title">COSA DICONO I NOSTRI GIOCATORI</h2>
+            <div class="testimonials-grid">
+                <div class="testimonial-card">
+                    <p class="testimonial-text">"Ho iniziato a giocare qui un mese fa e ho già vinto oltre 2000€! Il servizio clienti è fantastico e i pagamenti arrivano in meno di 24 ore."</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar" style="background-image: url('https://randomuser.me/api/portraits/men/32.jpg');"></div>
+                        <div class="author-info">
+                            <h4>Marco Rossi</h4>
+                            <p>Giocatore dal 2022</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="testimonial-card">
+                    <p class="testimonial-text">"Le slot sono fantastiche e i bonus sono veramente convenienti. Ho provato molti casinò online, ma questo è di gran lunga il migliore!"</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar" style="background-image: url('https://randomuser.me/api/portraits/women/44.jpg');"></div>
+                        <div class="author-info">
+                            <h4>Chiara Bianchi</h4>
+                            <p>Giocatrice dal 2021</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="testimonial-card">
+                    <p class="testimonial-text">"Non credevo fosse possibile vincere così tanto online. La scorsa settimana ho vinto il jackpot da 15.000€ sulla slot 'Fortuna Esplosiva'!"</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar" style="background-image: url('https://randomuser.me/api/portraits/men/76.jpg');"></div>
+                        <div class="author-info">
+                            <h4>Luca Verdi</h4>
+                            <p>Vincitore del Jackpot</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+    
+    <footer>
+        <div class="container">
+            <p>Gioca responsabilmente. Il gioco d'azzardo può creare dipendenza. | Età minima richiesta: 18 anni</p>
+            <p>© 2023 Casinò Online. Tutti i diritti riservati.</p>
+        </div>
+    </footer>
+    
+    <div class="jackpot" id="jackpot">
+        <div class="jackpot-content">
+            <h2>JACKPOT!</h2>
+            <p>Un giocatore ha appena vinto <strong>125.000€</strong> sulla slot TOP DIAMOND!</p>
+            <p>Potresti essere il prossimo fortunato!</p>
+            <div class="jackpot-buttons">
+                <a href="file:///C:/Users/maryp/Desktop/casin%C3%B2/slot%20beta.html" class="jackpot-button">Gioca anche tu!</a>
+                <button class="jackpot-button no" onclick="closeJackpot()">No grazie</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Mostra il popup del jackpot dopo 3 secondi
+        setTimeout(function() {
+            document.getElementById('jackpot').style.display = 'flex';
+        }, 3000);
+        
+        function closeJackpot() {
+            document.getElementById('jackpot').style.display = 'none';
+        }
+        
+        // Effetto di scrittura per il titolo hero
+        const heroTitle = document.querySelector('.hero h1');
+        const originalText = heroTitle.textContent;
+        heroTitle.textContent = '';
+        
+        let i = 0;
+        const typeWriter = () => {
+            if (i < originalText.length) {
+                heroTitle.textContent += originalText.charAt(i);
+                i++;
+                setTimeout(typeWriter, 100);
+            }
+        };
+        
+        // Avvia l'effetto di scrittura dopo un breve ritardo
+        setTimeout(typeWriter, 500);
+        
+        // Animazione per le carte promozionali
+        const promotionCards = document.querySelectorAll('.promotion-card');
+        promotionCards.forEach((card, index) => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+            
+            setTimeout(() => {
+                card.style.transition = 'opacity 0.5s, transform 0.5s';
+                card.style.opacity = '1';
+                card.style.transform = 'translateY(0)';
+            }, 300 + (index * 200));
+        });
+        
+        // Contatore di vincite in tempo reale
+        const winningCounter = document.querySelector('.winning-counter span');
+        let currentAmount = 254367;
+        
+        setInterval(() => {
+            // Aggiungi una piccola quantità casuale ogni 5 secondi
+            const randomIncrement = Math.floor(Math.random() * 100) + 50;
+            currentAmount += randomIncrement;
+            winningCounter.textContent = '€ ' + currentAmount.toLocaleString('it-IT');
+        }, 5000);
+    </script>
+</body>
+</html>
